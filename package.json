@@ -1,0 +1,25 @@
+{
+  "name": "scheduler",
+  "version": "1.0.0",
+  "description": "this is a project of scheduler to the school '17 de Julio'",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "tsinit": "tsc --init",
+    "dev": "nodemon --ext js,ts,env --exec 'ts-node -r tsconfig-paths/register src/index.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.6.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^15.0.2"
+  }
+}

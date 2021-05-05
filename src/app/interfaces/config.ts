@@ -1,0 +1,1 @@
+export type envtype = 'development' | 'production' |'testing';
