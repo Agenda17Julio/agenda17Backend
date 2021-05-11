@@ -1,36 +1,51 @@
 import { Request as X, Response as R} from 'express';
+import { generarToken } from '@helpers/jwt';
+import { i_user } from '@interface/auth';
+import { i_jwt } from '@interface/jwt';
+import Database from '@database/index';
+const db = Database.init().connection;
 
-export default class AuthService {
 
-    constructor () { }
+export const login = async (req:X, res:R) =>  {
 
-    public createUser(req:X, res:R) {
-        res.json({
-            ok: true
-        })
-    }
+    const { username:u, password } = req.body as i_user;
+    const sql = `select u.id, u.username
+        from Usuario u
+        inner join Persona p
+        on u.persona = p.id 
+        where u.password = ?
+        and (
+            u.username = ?
+            or p.correo = ?
+            or p.cedula = ?
+        );`
 
-    public updateUser(req:X, res:R){
+    const [ data ] = await db.execute(sql,[ password, u, u, u ]);
+    const info:any = data;
 
-    }
+    if( !info || info.length < 1 ) return res.status(403).json({
+        ok: false,
+        message: 'credenciales invalidas'
+    });
 
-    public deleteUser(req:X, res:R){
 
-    }
+    const dataToken:i_jwt = { uid:info[0].id, username:info[0].username };
+    const token = generarToken( dataToken );
 
-    public getAllUsers(req:X, res:R) {
+    res.json({
+        ok: true,
+        token
+    });
+}
 
-    }
 
-    public getUserById(req:X, res:R){
+export const refreshToken = (req:X, res:R) =>  {
+    const { payload } = req.body;
 
-    }
+    const token = generarToken( payload );
 
-    public login(req:X, res:R) {
-
-    }
-
-    public refreshToken(req:X, res:R) {
-
-    }
+    return res.json({
+        ok: true,
+        token
+    })
 }
