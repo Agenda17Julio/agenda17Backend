@@ -145,3 +145,18 @@ insert into Convocatoria(asunto,fecha,detalle,usuario) values
 -- reseteo de id auto incrementado 
 -- alter table Convocatoria auto_increment = 1;
 
+
+-- consultas 
+
+
+    -- login
+select *
+from Usuario u
+inner join Persona p
+on u.persona = p.id 
+where u.password = 'gt37285'
+and (
+	u.username = ''
+    or p.correo = ''
+    or p.cedula = '1004198334'
+);

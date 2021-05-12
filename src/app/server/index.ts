@@ -1,4 +1,5 @@
 import express, { Application,json,urlencoded } from 'express';
+import fileUpload from 'express-fileupload';
 
 export default abstract class server<F> {
     private readonly app:Application;
@@ -16,11 +17,16 @@ export default abstract class server<F> {
 
     private OnInit(){
         this.Parser();
+        this.FileUpload();
     }
 
     private Parser() {
         this.app.use( json() );
         this.app.use( urlencoded({extended:true}) );
+    }
+
+    private FileUpload(){
+        this.app.use(fileUpload())
     }
 
     get getName(){
