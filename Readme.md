@@ -1,4 +1,4 @@
-# `Proyecto CalendarApp Backend`
+# `Proyecto Agenda Backend`
 
 - [`Proyecto Agenda Backend`](#proyecto-calendarapp-backend)
   - [`Variables de entorno`](#variables-de-entorno)
