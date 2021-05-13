@@ -61,6 +61,12 @@ cp env.environment.backup .env.testing
 
 ## `Ejecucion del proyecto`
 
+
+
+**Nota**: Asegurate de haber ejecutado el script para la base de datos antes de proceder con la ejecución del proyecto.
+
+
+
 Una vez definidas las variables de entorno, el siguiente paso es instalar los modulos de node especificados en el archivo package.json.
 
 ```
