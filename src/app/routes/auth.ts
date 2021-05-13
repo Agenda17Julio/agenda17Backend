@@ -27,7 +27,7 @@ export default class AuthRoutes {
             .post( [...AuthVal(),isVal],login );
 
         this.Routes('/refreshtoken')
-            .put( verifyToken,refreshToken );
+            .get( verifyToken,refreshToken );
     }
 
     get Route(){

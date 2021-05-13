@@ -25,14 +25,14 @@ export const login = async (req:X, res:R) =>  {
 
     if( !info || info.length < 1 ) return res.status(403).json({
         ok: false,
-        message: 'credenciales invalidas'
+        msg: 'credenciales invalidas'
     });
 
 
     const dataToken:i_jwt = { uid:info[0].id, username:info[0].username };
     const token = generarToken( dataToken );
 
-    res.json({
+    return res.json({
         ok: true,
         token
     });
@@ -40,9 +40,9 @@ export const login = async (req:X, res:R) =>  {
 
 
 export const refreshToken = (req:X, res:R) =>  {
-    const { payload } = req.body;
+    const data = req.body.payload;
 
-    const token = generarToken( payload );
+    const token = generarToken(data.payload);
 
     return res.json({
         ok: true,

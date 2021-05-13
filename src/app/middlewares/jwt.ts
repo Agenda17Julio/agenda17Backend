@@ -6,7 +6,7 @@ export const verifyToken = async ( req:Request,res:Response,next:NextFunction ) 
 
         const token = req.header('X-Token') as string;
 
-        if( !token ) res.status( 404 ).json({
+        if( !token ) return res.status( 404 ).json({
             ok: false,
             msg: 'No existe el token en la petición'
         });
@@ -15,7 +15,7 @@ export const verifyToken = async ( req:Request,res:Response,next:NextFunction ) 
         const  { SECRECT_JWT_SEED:seed } = process.env;
 
         verify(token, String(seed), ( err, payload ) => {
-            if( err ) res.status(400).json({
+            if( err ) return res.status(400).json({
                 ok: false,
                 msg: 'Token no válido'
             });

@@ -39,7 +39,7 @@ export const sendMail = (req:Request,res:Response) => {
             err
         });
 
-        res.json({
+        return res.json({
             ok: true,
             msg: 'Email enviado correctamente!'
         })
