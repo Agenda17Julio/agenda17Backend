@@ -76,7 +76,7 @@ npm install
 una vez temine debes inicializar el entorno de typescript.
 
 ```
-npm run init
+npm run tsinit
 ```
 
 ---

@@ -23,7 +23,7 @@ export const login = async (req:X, res:R) =>  {
     const [ data ] = await db.execute(sql,[ password, u, u, u ]);
     const info:any = data;
 
-    if( !info || info.length < 1 ) return res.status(403).json({
+    if( !data || info.length < 1 ) return res.status(403).json({
         ok: false,
         msg: 'credenciales invalidas'
     });
