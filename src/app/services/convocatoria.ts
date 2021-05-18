@@ -15,26 +15,30 @@ const email = Email.init();
 export const sendMail = (req:Request,res:Response) => {
 
     const files = req.files as fileUpload.FileArray;
-    const file_adjuntos = files.adjuntos as Array<any>;
+    let file_adjuntos = files.adjuntos as Array<any>;
+    const { from, to,asunto,detalle  } = JSON.parse(req.body.data);
 
     let emailConfig:i_email = {
-        from: {
-            name: "juan",
-            address: "juan@gmail.com"
-        },
-        to: [
-            "pepe.37285@gmail.com"
-        ],
-        subject: "Mensaje de prueba",
-        html: "<h1> Hola mundo <h1/>"
+        from,
+        to,
+        subject: asunto,
+        html: detalle
     }
 
-    if( file_adjuntos ) emailConfig = {
-        ...emailConfig,
-        attachments: adjuntos(file_adjuntos)
+    if( file_adjuntos ) {
+
+        if( !Array.isArray(file_adjuntos) ) {
+            const aux = file_adjuntos;
+            file_adjuntos = [];
+            file_adjuntos[0] = aux;
+        }
+
+        emailConfig = {
+            ...emailConfig,
+            attachments: adjuntos(file_adjuntos)
+        }
     }
     
-
 
     email.sendMail( emailConfig, (err:any) => {
         if( err ) return res.status(500).json({
