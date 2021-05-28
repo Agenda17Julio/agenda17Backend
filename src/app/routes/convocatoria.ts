@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { verifyToken } from '@middlewares/jwt';
-import { sendMail,getAllAnnoucements, getActiveAnnoucements } from '@services/convocatoria';
+import { 
+    sendMail,
+    getAllAnnoucements, 
+    getActiveAnnoucements,
+    deleteAnnucements,
+    getUsers } from '@services/convocatoria';
 
 export default class ConvocatoriaRoutes {
     
@@ -28,12 +33,17 @@ export default class ConvocatoriaRoutes {
         this.Routes('/mail')
             .post( sendMail );
 
+        this.Routes('/users')
+            .get( getUsers );
 
         this.Routes('/annoucements/:pagina')
-            .get( getAllAnnoucements )
+            .get( getAllAnnoucements );
 
         this.Routes('/allannoucements/active')
-            .get( getActiveAnnoucements )
+            .get( getActiveAnnoucements );
+
+        this.Routes('/annoucements/:id')
+            .delete( deleteAnnucements );
     }
 
     get Route(){
