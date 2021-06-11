@@ -7,7 +7,8 @@ import fileUpload from 'express-fileupload';
 import Database from '@database/index';
 import moment from 'moment';
 import { searchconv } from '../helpers/sql/convocatorias';
-import { SentMessageInfo } from 'nodemailer';
+import { resolve } from 'path';
+import fs from 'fs';
 
 
 
@@ -49,7 +50,7 @@ export const sendMail = async (req:Request,res:Response) => {
                     file_adjuntos[0] = aux;
                 }
                 
-                archivos = adjuntos(file_adjuntos);
+                archivos = adjuntos(file_adjuntos, id);
         
                 emailConfig = {
                     ...emailConfig,
@@ -82,7 +83,6 @@ export const sendMail = async (req:Request,res:Response) => {
                 })
                 
             });
-
 
         }else {
             return res.status(400).json({
@@ -168,6 +168,11 @@ export const deleteAnnucements = async (req:Request, res:Response) => {
     await db.execute(children,[id]);
     await db.execute(sql,[id]);
 
+    let ruta = `${resolve(__dirname, `../files/${id}`)}`;
+    if( fs.existsSync(ruta) ){
+        fs.rmdirSync(ruta,{recursive:true});
+    }
+
     return res.json({
         ok: true,
         msg: 'Convocatoria eleminada correctamente!'
@@ -209,7 +214,6 @@ export const searchConvocatoria = async (req:Request, res: Response) => {
         registros
     })
 }
-
 
 export const updateAnnoucements = async(req:Request, res:Response) => {
     const { id } = req.params;
