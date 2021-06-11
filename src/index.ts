@@ -1,3 +1,4 @@
+'use strict';
 import '@config/index';
 import Database from '@database/index';
 import MainServer from '@server/main';

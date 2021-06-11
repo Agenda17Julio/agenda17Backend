@@ -7,6 +7,7 @@ export default class EMail {
 
     private transporterConfig:any;
     private static instance:EMail;
+    private transport:any;
 
     private constructor (){
         this.transporterConfig = transportConfig;
@@ -20,7 +21,11 @@ export default class EMail {
     }
 
     get Transporter (){
-        return createTransport( this.transporterConfig );
+        if( !this.transport ){
+            this.transport = createTransport( this.transporterConfig );
+        }
+        
+        return this.transport;
     }
 
     public sendMail ( optsMail:i_email,Callback:Function ) {

@@ -5,7 +5,9 @@ import {
     getAllAnnoucements, 
     getActiveAnnoucements,
     deleteAnnucements,
-    getUsers } from '@services/convocatoria';
+    getUsers, 
+    searchConvocatoria,
+    updateAnnoucements} from '@services/convocatoria';
 
 export default class ConvocatoriaRoutes {
     
@@ -42,8 +44,12 @@ export default class ConvocatoriaRoutes {
         this.Routes('/allannoucements/active')
             .get( getActiveAnnoucements );
 
+        this.Routes('/search/:pagina')
+            .post( searchConvocatoria );
+
         this.Routes('/annoucements/:id')
-            .delete( deleteAnnucements );
+            .delete( deleteAnnucements )
+            .put( updateAnnoucements )
     }
 
     get Route(){
