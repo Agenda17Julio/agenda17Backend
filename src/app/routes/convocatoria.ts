@@ -7,7 +7,8 @@ import {
     deleteAnnucements,
     getUsers, 
     searchConvocatoria,
-    updateAnnoucements} from '@services/convocatoria';
+    updateAnnoucements,
+    files} from '@services/convocatoria';
 
 export default class ConvocatoriaRoutes {
     
@@ -49,7 +50,10 @@ export default class ConvocatoriaRoutes {
 
         this.Routes('/annoucements/:id')
             .delete( deleteAnnucements )
-            .put( updateAnnoucements )
+            .put( updateAnnoucements );
+        
+        this.Routes('/files/:id/:filename')
+            .get( files );
     }
 
     get Route(){

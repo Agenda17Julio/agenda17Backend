@@ -23,6 +23,8 @@
     "mysql2": "^2.2.5",
     "nodemailer": "^6.6.0",
     "nodemon": "^2.0.7",
+    "react-doc-viewer": "^0.1.5",
+    "react-file-viewer-fix": "^0.1.2",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.4"

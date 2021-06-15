@@ -7,6 +7,7 @@ import fileUpload from 'express-fileupload';
 import Database from '@database/index';
 import moment from 'moment';
 import { searchconv } from '../helpers/sql/convocatorias';
+import { filesExists } from '../helpers/filesExists';
 import { resolve } from 'path';
 import fs from 'fs';
 
@@ -61,9 +62,8 @@ export const sendMail = async (req:Request,res:Response) => {
                 if ( archivos.length > 0 ){
                     
                     archivos.forEach( async({ filename }:{filename:string}) => {
-                        const name = filename.substring( 0, filename.lastIndexOf('.'));
                         const sql = `insert into AdjuntoConvocatoria(convocatoria, nombre) values(?,?);`;
-                        await db.execute(sql,[id,name]);
+                        await db.execute(sql,[id,filename]);
                     });
                 }
             }
@@ -123,13 +123,14 @@ export const getAllAnnoucements = async( req:Request, res:Response ) => {
         msg: 'no existen convocatorias'
     });
 
+    const registrosdata = filesExists(data as any, res);
+
     return res.json({
         ok: true,
-        data,
+        data: registrosdata,
         registros
     });
 };
-
 
 
 export const getActiveAnnoucements = async (req:Request, res:Response) => {
@@ -142,14 +143,11 @@ export const getActiveAnnoucements = async (req:Request, res:Response) => {
 
     const [ data ] = await db.execute(sql,[currentDate.format('yyyy-MM-DD HH:mm')]);
 
-    if( !data ) return res.status(404).json({
-        ok: false,
-        msg: 'no existen convocatorias'
-    });
+    const registros = filesExists(data as any,res);
 
     return res.json({
         ok: true,
-        data
+        data:registros
     });
 }
 
@@ -237,4 +235,21 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
         ok: true,
         msg: 'Convocatoria actualizada correctamente!'
     });
+}
+
+
+
+export const files = (req:Request, res: Response) => {
+    const { id,filename } = req.params;
+
+    const path = resolve(__dirname, `../files/${id}/${filename}`)
+
+    if( fs.existsSync(path) ){
+        return res.sendFile(path);
+    }else {
+        return res.json({
+            ok: false,
+            msg: 'no existen archivos para esta convocatoria'
+        })
+    }
 }
