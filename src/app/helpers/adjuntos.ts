@@ -4,26 +4,42 @@ import fs from 'fs';
 import { resolve } from 'path';
 
 
-export const adjuntos = (adjuntos:Array<any>, id_conv: number) => {
+export const adjuntos = (adjuntos:Array<any>, id_conv: number, isUpdate:boolean) => {
 
     let ruta = `${resolve(__dirname, `../files/${id_conv}`)}`;
 
-    console.log(ruta);
     if(!fs.existsSync(ruta)){
         fs.mkdirSync(ruta);
     }
 
-    return adjuntos.map(( {name,data,mv}:i_file, index:number ) => {
-        
-        const ext = name.substring(name.lastIndexOf('.'),name.length);
-        const filename = `${new Date().getTime()}${index}${ext}`;
-        mv(`${ruta}/${filename}`);
+    const data_adjuntos = [];
 
-        const adjunto:i_email_attachment = {
-            filename,
+    for (const i in adjuntos) {
+        const {name,data,mv}:i_file = adjuntos[i];
+        mv(`${ruta}/${name}`);
+        data_adjuntos.push({
+            filename: name,
             content: data
-        };
+        });
+    }
 
-        return adjunto;
-    })
+
+    if ( isUpdate ) {
+        let dir = fs.readdirSync(ruta);
+        const dataread = [];
+        
+        for (const i in dir) {
+            dataread.push({
+                filename: dir[i],
+                content: fs.readFileSync(`${ruta}/${dir[i]}`)
+            })
+        }
+        
+        dataread.push(...data_adjuntos);
+
+        return dataread;
+    }else {
+        return data_adjuntos;
+    }
+
 }

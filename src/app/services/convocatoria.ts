@@ -51,13 +51,12 @@ export const sendMail = async (req:Request,res:Response) => {
                     file_adjuntos[0] = aux;
                 }
                 
-                archivos = adjuntos(file_adjuntos, id);
+                archivos = adjuntos(file_adjuntos, id, false);
         
                 emailConfig = {
                     ...emailConfig,
                     attachments: archivos
                 }
-
 
                 if ( archivos.length > 0 ){
                     
@@ -215,26 +214,83 @@ export const searchConvocatoria = async (req:Request, res: Response) => {
 
 export const updateAnnoucements = async(req:Request, res:Response) => {
     const { id } = req.params;
-    const { asunto,fecha,detalle,to } = req.body;
+    const { from, to, asunto, detalle, fecha  } = JSON.parse(req.body.data);
 
-    if( !asunto || !fecha || !detalle || !to ) return res.status(400).json({
-        ok: false, 
-        msg: 'envie todos los parametros'
-    })
+    const files = req.files as fileUpload.FileArray;
+    let archivos:Array<any> = [];
 
-    const sql = `update Convocatoria
-        set asunto=?,
-        fecha=?,
-        detalle=?,
-        destinatarios=?
-        where id=?`;
+    let emailConfig:i_email = {
+        from,
+        to,
+        subject: `${asunto} - actualización de convocatoria ${id}`,
+        html: detalle
+    }
 
-    await db.execute(sql,[asunto,moment(fecha).format('yyyy-MM-DD HH:mm'),detalle,JSON.stringify(to), id]);
 
-    return res.json({
-        ok: true,
-        msg: 'Convocatoria actualizada correctamente!'
-    });
+    if( moment(fecha).isValid() && moment(fecha) >= moment(new Date()) ) {
+
+        const sql = `update Convocatoria
+            set asunto=?,
+            fecha=?,
+            detalle=?,
+            destinatarios=?
+            where id=?`;
+
+        await db.execute(sql,[asunto,moment(fecha).format('yyyy-MM-DD HH:mm'),detalle,JSON.stringify(to), id]);     
+
+        if( files ) {
+            let file_adjuntos = files.adjuntos as Array<any>;
+            
+            if( !Array.isArray(file_adjuntos) ) {
+                const aux = file_adjuntos;
+                file_adjuntos = [];
+                file_adjuntos[0] = aux;
+            }
+
+            let ruta = `${resolve(__dirname, `../files/${id}`)}`;
+            
+            if( fs.existsSync(ruta) ){
+                archivos = adjuntos(file_adjuntos, Number(id), true);
+
+                emailConfig = {
+                    ...emailConfig,
+                    attachments: archivos
+                }
+
+            }
+
+            if ( archivos.length > 0 ){
+                archivos.forEach( async({ filename }:{filename:string}) => {
+                    const sql = `insert into AdjuntoConvocatoria(convocatoria, nombre) values(?,?);`;
+                    await db.execute(sql,[id,filename]);
+                });               
+            }
+
+        }
+
+   
+        email.sendMail( emailConfig, (err: Error ) => {
+            if( err ) return res.status(500).json({
+                ok: false,
+                msg: 'Oh no! ocurrio un error inesperado, Por favor contacta con un administrador',
+                err
+            })
+
+            return res.status(200).json({
+                ok: true,
+                msg: 'Convocatoria enviada y registrada con exito',
+                id
+            })
+            
+        });
+
+    }else {
+        return res.status(400).json({
+            ok: false,
+            msg: 'La fecha y hora especificada no son válidas para el día seleccionado'
+        });
+    }
+
 }
 
 
@@ -246,6 +302,36 @@ export const files = (req:Request, res: Response) => {
 
     if( fs.existsSync(path) ){
         return res.sendFile(path);
+    }else {
+        return res.json({
+            ok: false,
+            msg: 'no existen archivos para esta convocatoria'
+        })
+    }
+}
+
+
+
+export const deleteAdjunto = async (req:Request, res: Response) => {
+    const { id,filename } = req.params;
+
+    const path = resolve(__dirname, `../files/${id}`);
+
+    if( fs.existsSync(`${path}/${filename}`) ){
+        fs.unlinkSync( `${path}/${filename}` );
+
+        if( fs.readdirSync(path).length <= 0 ){
+            fs.rmdirSync(path);
+        }
+
+        const sql = `delete from AdjuntoConvocatoria where convocatoria=? and nombre=?;`;
+
+        await db.execute(sql, [id, filename]);
+
+        return res.json({
+            ok: true,
+            msg: `Archivo ${ filename } eliminado del servidor correctamente`
+        })
     }else {
         return res.json({
             ok: false,
