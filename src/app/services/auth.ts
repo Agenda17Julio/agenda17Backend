@@ -9,7 +9,7 @@ const db = Database.init().connection;
 export const login = async (req:X, res:R) =>  {
 
     const { username:u, password } = req.body as i_user;
-    const sql = `select u.id, u.username,p.correo
+    const sql = `select u.id, u.username,p.correo, u.rol
         from Usuario u
         inner join Persona p
         on u.persona = p.id 
@@ -29,7 +29,7 @@ export const login = async (req:X, res:R) =>  {
     });
 
 
-    const dataToken:i_jwt = { uid:info[0].id, username:info[0].username, email: info[0].correo  };
+    const dataToken:i_jwt = { uid:info[0].id, username:info[0].username, email: info[0].correo, rol: info[0].rol  };
     const token = generarToken( dataToken );
 
     return res.json({

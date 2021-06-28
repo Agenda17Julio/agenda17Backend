@@ -96,6 +96,7 @@ export const sendMail = async (req:Request,res:Response) => {
 export const getAllAnnoucements = async( req:Request, res:Response ) => {
 
     const { pagina } = req.params;
+    const { payload:{ rol, email } } = req.body.payload;
 
     if( !pagina  ) return res.status(404).json({
         ok: false,
@@ -104,18 +105,35 @@ export const getAllAnnoucements = async( req:Request, res:Response ) => {
 
     const cant_registros = 10;
     const inicio = cant_registros * Number(pagina) - cant_registros;
+    let sql = '';
+    let sql_reg = '';
 
+    if( rol === 1 ){
 
-    const sql = `select c.id, c.asunto, c.fecha, c.detalle,  c.destinatarios as 'to', u.username as usuario
-        from Convocatoria c
-        inner join Usuario u
-        where c.usuario=u.id
-        order by c.id asc 
-        limit ? 
-        offset ?;`;
+        sql = `select c.id, c.asunto, c.fecha, c.detalle,  c.destinatarios as 'to', u.username as usuario
+            from Convocatoria c
+            inner join Usuario u
+            on c.usuario=u.id
+            order by c.id asc 
+            limit ? 
+            offset ?;`;
+        sql_reg = `select count(*) as registros from Convocatoria;`;
+    }else {
+        sql = `select c.id, c.asunto, c.fecha, c.detalle,  c.destinatarios as 'to', u.username as usuario
+            from Convocatoria c
+            inner join Usuario u
+            on c.usuario=u.id
+            where c.destinatarios like '%${email}%'
+            order by c.id asc 
+            limit ? 
+            offset ?;`;
+        
+        sql_reg = `select count(*) as registros from Convocatoria where destinatarios like '%${email}%';`;
+    }
+   
 
     const [ data ] = await db.execute(sql,[cant_registros.toString(),inicio.toString()]);
-    const [ registros ] = await db.execute('select count(*) as registros from Convocatoria;');
+    const [ registros ] = await db.execute(sql_reg);
 
     if( !data || !registros ) return res.status(404).json({
         ok: false,
@@ -134,11 +152,22 @@ export const getAllAnnoucements = async( req:Request, res:Response ) => {
 
 export const getActiveAnnoucements = async (req:Request, res:Response) => {
 
+    const { payload:{ rol, email } } = req.body.payload;
     const currentDate = moment(Date.now());
 
-    const sql = `select c.id, c.asunto, c.fecha, c.detalle, c.usuario, c.destinatarios as 'to'
-        from Convocatoria c
-        where fecha >= ?;`
+    let sql = '';
+
+    if( rol === 1 ) {
+        sql = `select c.id, c.asunto, c.fecha, c.detalle, c.usuario, c.destinatarios as 'to'
+            from Convocatoria c
+            where fecha >= ?;`
+    }else {
+        sql = `select c.id, c.asunto, c.fecha, c.detalle, c.usuario, c.destinatarios as 'to'
+            from Convocatoria c
+            where c.destinatarios like '%${email}%'
+            and fecha >= ?;`
+    }
+
 
     const [ data ] = await db.execute(sql,[currentDate.format('yyyy-MM-DD HH:mm')]);
 
@@ -269,20 +298,26 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
         }
 
    
-        email.sendMail( emailConfig, (err: Error ) => {
-            if( err ) return res.status(500).json({
-                ok: false,
-                msg: 'Oh no! ocurrio un error inesperado, Por favor contacta con un administrador',
-                err
-            })
+        // email.sendMail( emailConfig, (err: Error ) => {
+        //     if( err ) return res.status(500).json({
+        //         ok: false,
+        //         msg: 'Oh no! ocurrio un error inesperado, Por favor contacta con un administrador',
+        //         err
+        //     })
 
-            return res.status(200).json({
-                ok: true,
-                msg: 'Convocatoria enviada y registrada con exito',
-                id
-            })
+        //     return res.status(200).json({
+        //         ok: true,
+        //         msg: 'Convocatoria enviada y registrada con exito',
+        //         id
+        //     })
             
-        });
+        // });
+
+        return res.status(200).json({
+            ok: true,
+            msg: 'Convocatoria enviada y registrada con exito',
+            id
+        })
 
     }else {
         return res.status(400).json({
