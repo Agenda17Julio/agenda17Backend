@@ -267,6 +267,12 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
 
         await db.execute(sql,[asunto,moment(fecha).format('yyyy-MM-DD HH:mm'),detalle,JSON.stringify(to), id]);     
 
+        let ruta = `${resolve(__dirname, `../files/${id}`)}`;
+
+        if( !fs.existsSync(ruta) ){
+            fs.mkdirSync(ruta);
+        }
+
         if( files ) {
             let file_adjuntos = files.adjuntos as Array<any>;
             
@@ -275,49 +281,53 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
                 file_adjuntos = [];
                 file_adjuntos[0] = aux;
             }
+            archivos = adjuntos(file_adjuntos, Number(id), true);
 
-            let ruta = `${resolve(__dirname, `../files/${id}`)}`;
-            
-            if( fs.existsSync(ruta) ){
-                archivos = adjuntos(file_adjuntos, Number(id), true);
-
-                emailConfig = {
-                    ...emailConfig,
-                    attachments: archivos
-                }
-
+            emailConfig = {
+                ...emailConfig,
+                attachments: archivos
             }
+
+
 
             if ( archivos.length > 0 ){
                 archivos.forEach( async({ filename }:{filename:string}) => {
+                    const sqldelete = `delete from AdjuntoConvocatoria where nombre=?`;
                     const sql = `insert into AdjuntoConvocatoria(convocatoria, nombre) values(?,?);`;
+                    await db.execute(sqldelete,[filename]);
                     await db.execute(sql,[id,filename]);
                 });               
             }
 
+        }else {
+            let dir = fs.readdirSync(ruta);
+            
+            for (const i in dir) {
+                archivos.push({
+                    filename: dir[i],
+                    content: fs.readFileSync(`${ruta}/${dir[i]}`)
+                })
+            }
         }
 
    
-        // email.sendMail( emailConfig, (err: Error ) => {
-        //     if( err ) return res.status(500).json({
-        //         ok: false,
-        //         msg: 'Oh no! ocurrio un error inesperado, Por favor contacta con un administrador',
-        //         err
-        //     })
+        email.sendMail( emailConfig, (err: Error ) => {
+            if( err ) return res.status(500).json({
+                ok: false,
+                msg: 'Oh no! ocurrio un error inesperado, Por favor contacta con un administrador',
+                err
+            })
 
-        //     return res.status(200).json({
-        //         ok: true,
-        //         msg: 'Convocatoria enviada y registrada con exito',
-        //         id
-        //     })
+           
+
+            return res.status(200).json({
+                ok: true,
+                msg: 'Convocatoria enviada y registrada con exito',
+                id
+            })
             
-        // });
+        });
 
-        return res.status(200).json({
-            ok: true,
-            msg: 'Convocatoria enviada y registrada con exito',
-            id
-        })
 
     }else {
         return res.status(400).json({
