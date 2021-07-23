@@ -89,8 +89,6 @@ export const sendMail = async (req:Request,res:Response) => {
                 msg: 'La fecha y hora especificada no son válidas para el día seleccionado'
             });
         }
-
-   
 };
 
 export const getAllAnnoucements = async( req:Request, res:Response ) => {
@@ -149,7 +147,6 @@ export const getAllAnnoucements = async( req:Request, res:Response ) => {
     });
 };
 
-
 export const getActiveAnnoucements = async (req:Request, res:Response) => {
 
     const { payload:{ rol, email } } = req.body.payload;
@@ -179,7 +176,6 @@ export const getActiveAnnoucements = async (req:Request, res:Response) => {
     });
 }
 
-
 export const deleteAnnucements = async (req:Request, res:Response) => {
     const { id } = req.params;
 
@@ -205,7 +201,6 @@ export const deleteAnnucements = async (req:Request, res:Response) => {
     });
 }
 
-
 export const getUsers = async (req:Request,res:Response) => {
     const sql = `select p.correo
         from Usuario u 
@@ -219,8 +214,6 @@ export const getUsers = async (req:Request,res:Response) => {
         data
     });
 }
-
-
 
 export const searchConvocatoria = async (req:Request, res: Response) => {
 
@@ -267,7 +260,7 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
 
         await db.execute(sql,[asunto,moment(fecha).format('yyyy-MM-DD HH:mm'),detalle,JSON.stringify(to), id]);     
 
-        let ruta = `${resolve(__dirname, `../files/${id}`)}`;
+        let ruta = `${resolve(__dirname, `../files/convocatoria/${id}`)}`;
 
         if( !fs.existsSync(ruta) ){
             fs.mkdirSync(ruta);
@@ -328,7 +321,6 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
             
         });
 
-
     }else {
         return res.status(400).json({
             ok: false,
@@ -337,8 +329,6 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
     }
 
 }
-
-
 
 export const files = (req:Request, res: Response) => {
     const { id,filename } = req.params;
@@ -354,8 +344,6 @@ export const files = (req:Request, res: Response) => {
         })
     }
 }
-
-
 
 export const deleteAdjunto = async (req:Request, res: Response) => {
     const { id,filename } = req.params;

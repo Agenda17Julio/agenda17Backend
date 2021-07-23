@@ -6,7 +6,7 @@ import { resolve } from 'path';
 
 export const adjuntos = (adjuntos:Array<any>, id_conv: number, isUpdate:boolean) => {
 
-    let ruta = `${resolve(__dirname, `../files/${id_conv}`)}`;
+    let ruta = `${resolve(__dirname, `../files/convocatoria/${id_conv}`)}`;
 
     if(!fs.existsSync(ruta)){
         fs.mkdirSync(ruta);
