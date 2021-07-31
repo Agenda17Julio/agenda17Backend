@@ -69,6 +69,28 @@ create table AdjuntoConvocatoria (
         on delete restrict
 );
 
+create table actaAdjuntos (
+	id bigint not null auto_increment,
+	filename character varying(30),
+    acta int,
+    constraint pk_actaAdjuntos primary key(id),
+	constraint fk_actas_adjuntos foreign key (acta)
+		references actas(id)
+        on update restrict
+        on delete restrict
+);
+
+create table actas (
+	id int not null auto_increment,
+    convocatoria bigint not null,
+    constraint pk_actas primary key(id),
+    constraint fk_actas_conv foreign key(convocatoria)
+		references Convocatoria(id)
+        on update restrict
+        on delete restrict
+);
+
+
 
 -- agregación de constraint necesarios
 alter table Persona add constraint uniq_persona_cedula unique(cedula);

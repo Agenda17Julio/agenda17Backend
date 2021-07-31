@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+    mysql_agenda_db:
+        container_name: mysql_agenda
+        image: mysql
+        ports:
+            -   3306:3306
+        volumes: 
+            -   mysql_vol:/var/lib/mysql
+        networks:
+            -   app_net
+        environment:
+            -   MYSQL_ROOT_PASSWORD=123456
+            -   MYSQL_DATABASE=agenda
+            -   MYSQL_USER=localagenda
+            -   MYSQL_PASSWORD=123456
+
+volumes:
+    mysql_vol:
+
+networks:
+    app_net:
+        driver: bridge

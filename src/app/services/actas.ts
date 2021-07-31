@@ -1,11 +1,10 @@
 import Database from '@database/index';
 import { Request, Response } from 'express';
 import { resolve } from 'path';
-import { mkdirSync, existsSync, unlinkSync, rmdirSync, unlink } from 'fs';
+import { mkdirSync, existsSync, unlinkSync, rmdirSync } from 'fs';
 import { readdirSync } from 'fs';
 
 const db = Database.init().connection;
-
 
 export const addNewActa = async (req:Request, res:Response) => {
 
@@ -16,7 +15,7 @@ export const addNewActa = async (req:Request, res:Response) => {
         msg: "Files doesn't exists"
     });
 
-    const [ data, info ] = await db.execute('insert into actas (convocatoria) values(?);',[conv_id]);
+    const [ data ] = await db.execute('insert into actas (convocatoria) values(?);',[conv_id]);
     const id = (data as any)['insertId'];
 
     let file_adjuntos = req.files.actasadj as Array<any>;
@@ -45,6 +44,7 @@ export const addNewActa = async (req:Request, res:Response) => {
             acta: id
         })
     }
+
 
     return res.json({
         ok: true,
@@ -82,12 +82,11 @@ export const updateActa = async(req:Request, res: Response) => {
         const [ adj ] = await db.execute('insert into actaAdjuntos(filename,acta) values(?,?);',[name, id_acta]);
         
         adjuntos_res.push({
-            filename: name,
             id: (adj as any)['insertId'],
-            acta: id_acta
+            filename: name,
+            acta: Number(id_acta)
         })
     }
-
 
     res.json({
         ok: true,
@@ -123,22 +122,37 @@ export const deleteActa = async(req:Request, res:Response) => {
 export const getAllActas = async (req:Request, res: Response) => {
 
     const { pagina } = req.params;
+    const { payload:{ rol,email } } = req.body.payload;
+
+    // const sql = (info:string) => `select ${info}
+    //     from actas a
+    //     inner join Convocatoria c
+    //     on a.convocatoria = c.id
+    //     order by a.id`;
 
     const sql = (info:string) => `select ${info}
-        from actas a
-        inner join Convocatoria c
-        on a.convocatoria = c.id
-        order by a.id`;
+        from actas act
+        inner join Convocatoria conv
+        on act.convocatoria = conv.id
+        inner join Usuario u 
+        on conv.usuario=u.id
+        where u.rol=${rol}
+        and conv.destinatarios like '%${email}%'
+        order by act.id`;
 
 
     const cant_registros = 10;
     const inicio = cant_registros * Number(pagina) - cant_registros;
         
-    const [ data ] = await db.execute(`${sql('a.id, c.id as id_conv, c.asunto')} limit ? offset ?;`,[cant_registros.toString(),inicio.toString()]);
+    const [ data ] = await db.execute(`${sql('act.id, conv.id as id_conv, conv.asunto')} limit ? offset ?;`,[
+        cant_registros.toString(),
+        inicio.toString()
+    ]);
+
     const actas = data as any[];
 
 
-    const [ reg ] = await db.execute(sql('count(*) as registros'));
+    const [ reg ] = await db.execute(sql('count(*) as registros'),[rol,email]);
 
 
     for (const i in actas) {
