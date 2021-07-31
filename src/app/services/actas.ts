@@ -123,13 +123,6 @@ export const getAllActas = async (req:Request, res: Response) => {
 
     const { pagina } = req.params;
     const { payload:{ rol,email } } = req.body.payload;
-
-    // const sql = (info:string) => `select ${info}
-    //     from actas a
-    //     inner join Convocatoria c
-    //     on a.convocatoria = c.id
-    //     order by a.id`;
-
     const sql = (info:string) => `select ${info}
         from actas act
         inner join Convocatoria conv
