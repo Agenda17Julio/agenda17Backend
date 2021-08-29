@@ -1,6 +1,6 @@
-import { i_valid_types,type } from '&interface/valid_types';
-
-const types:i_valid_types<type> = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var types = {
     email: {
         field: 'email',
         msg: 'El email es necesario!'
@@ -13,7 +13,5 @@ const types:i_valid_types<type> = {
         field: 'username',
         msg: 'Por favor ingresa un username!'
     }
-}
-
-
-export default types;
+};
+exports.default = types;

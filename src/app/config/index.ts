@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { envtype } from '@interface/config';
+import { envtype } from '&interface/config';
 
 config({ path:'.env' });
 const { NODE_ENV } = process.env;

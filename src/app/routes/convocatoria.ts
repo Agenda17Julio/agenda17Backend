@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from '@middlewares/jwt';
+import { verifyToken } from '&middlewares/jwt';
 import { 
     sendMail,
     getAllAnnoucements, 
@@ -9,7 +9,7 @@ import {
     searchConvocatoria,
     updateAnnoucements,
     files,
-    deleteAdjunto} from '@services/convocatoria';
+    deleteAdjunto} from '&services/convocatoria';
 
 export default class ConvocatoriaRoutes {
     

@@ -1,5 +1,5 @@
-import { i_file } from "@interface/file";
-import { i_email_attachment } from "@interface/mail";
+import { i_file } from "&interface/file";
+import { i_email_attachment } from "&interface/mail";
 import fs from 'fs';
 import { resolve } from 'path';
 

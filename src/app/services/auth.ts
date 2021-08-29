@@ -1,8 +1,8 @@
 import { Request as X, Response as R} from 'express';
-import { generarToken } from '@helpers/jwt';
-import { i_user } from '@interface/auth';
-import { i_jwt } from '@interface/jwt';
-import Database from '@database/index';
+import { generarToken } from '&helpers/jwt';
+import { i_user } from '&interface/auth';
+import { i_jwt } from '&interface/jwt';
+import Database from '&database/index';
 const db = Database.init().connection;
 
 

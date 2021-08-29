@@ -1,4 +1,4 @@
-import Database from '@database/index';
+import Database from '&database/index';
 import { Request, Response } from 'express';
 import { resolve } from 'path';
 import { mkdirSync, existsSync, unlinkSync, rmdirSync } from 'fs';

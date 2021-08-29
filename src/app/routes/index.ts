@@ -1,6 +1,6 @@
-import Auth from '@routes/auth';
-import Convocatoria from '@routes/convocatoria';
-import Actas from '@routes/actas';
+import Auth from '&routes/auth';
+import Convocatoria from '&routes/convocatoria';
+import Actas from '&routes/actas';
 
 const auth = Auth.init();
 const convocatoria = Convocatoria.init();

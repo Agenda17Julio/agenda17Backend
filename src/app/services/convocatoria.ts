@@ -1,10 +1,10 @@
 'use strict';
 import { Request, Response } from 'express';
-import { i_email } from '@interface/mail';
-import { adjuntos } from '@helpers/adjuntos';
-import Email from '@mail/index';
+import { i_email } from '&interface/mail';
+import { adjuntos } from '&helpers/adjuntos';
+import Email from '&mail/index';
 import fileUpload from 'express-fileupload';
-import Database from '@database/index';
+import Database from '&database/index';
 import moment from 'moment';
 import { searchconv } from '../helpers/sql/convocatorias';
 import { filesExists } from '../helpers/filesExists';

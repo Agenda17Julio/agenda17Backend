@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { login,refreshToken } from '@services/auth';
-import { verifyToken } from '@middlewares/jwt';
-import AuthVal from '@middlewares/validations/auth';
-import isVal from '@middlewares/validations/isVal';
+import { login,refreshToken } from '&services/auth';
+import { verifyToken } from '&middlewares/jwt';
+import AuthVal from '&middlewares/validations/auth';
+import isVal from '&middlewares/validations/isVal';
 
 export default class AuthRoutes {
     

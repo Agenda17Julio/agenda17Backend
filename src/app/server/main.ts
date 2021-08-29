@@ -1,5 +1,5 @@
-import Server from '@server/index';
-import endPoint from '@routes/index';
+import Server from '&server/index';
+import endPoint from '&routes/index';
 
 export default class MainServer extends Server<Function> {
     

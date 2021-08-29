@@ -1,6 +1,7 @@
 import express, { Application,json,urlencoded } from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
+import path from 'path';
 
 export default abstract class server<F> {
     private readonly app:Application;
@@ -17,9 +18,11 @@ export default abstract class server<F> {
     abstract listenServer(x:F):any;
 
     private OnInit(){
+
         this.Parser();
         this.FileUpload();
         this.Cors();
+        this.Public();
     }
 
     private Parser() {
@@ -34,9 +37,14 @@ export default abstract class server<F> {
     private Cors() {
         this.app.use(cors({
             origin: [
-                'http://localhost:3000'
+                'http://localhost'
             ]
         }))
+    }
+
+    private Public() {
+        this.app.use( express.static(path.join(__dirname, '../../../public')) );
+        
     }
 
     get getName(){

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyToken } from '@middlewares/jwt';
+import { verifyToken } from '&middlewares/jwt';
 import { addNewActa,
     getAllAdjuntosActa,
     getAllActas,
@@ -8,7 +8,7 @@ import { addNewActa,
     getAnnoucementsActas,
     updateActa,
     deleteActa
-} from '@services/actas';
+} from '&services/actas';
 
 export default class ActaasRoutes {
     

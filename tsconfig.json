@@ -46,15 +46,15 @@
     "moduleResolution": "node",                     /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": "./src",                             /* Base directory to resolve non-absolute module names. */
     "paths": {
-      "@interface/*": ["app/interfaces/*"],
-      "@config/*":["app/config/*"],
-      "@server/*":["app/server/*"],
-      "@routes/*":["app/routes/*"],
-      "@services/*":["app/services/*"],
-      "@database/*":["app/database/*"],
-      "@middlewares/*":["app/middlewares/*"],
-      "@helpers/*":["app/helpers/*"],
-      "@mail/*":["app/email/*"]
+      "&interface/*": ["app/interfaces/*"],
+      "&config/*":["app/config/*"],
+      "&server/*":["app/server/*"],
+      "&routes/*":["app/routes/*"],
+      "&services/*":["app/services/*"],
+      "&database/*":["app/database/*"],
+      "&middlewares/*":["app/middlewares/*"],
+      "&helpers/*":["app/helpers/*"],
+      "&mail/*":["app/email/*"]
     },                                              /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     // "rootDirs": [],                              /* List of root folders whose combined content represents the structure of the project at runtime. */
     // "typeRoots": [],                             /* List of folders to include type definitions from. */

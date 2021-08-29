@@ -1,8 +1,8 @@
 'use strict';
-import '@config/index';
-import Database from '@database/index';
-import MainServer from '@server/main';
-import Mail from '@mail/index';
+import '&config/index';
+import Database from '&database/index';
+import MainServer from '&server/main';
+import Mail from '&mail/index';
 
 const database = Database.init().connection;
 

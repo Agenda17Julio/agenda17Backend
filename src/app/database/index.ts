@@ -1,5 +1,5 @@
 import { createPool,Pool,PoolOptions} from 'mysql2/promise';
-import { config } from '@config/db';
+import { config } from '&config/db';
 
 export default class Database {
 

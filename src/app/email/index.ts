@@ -1,6 +1,6 @@
 import { createTransport } from 'nodemailer';
-import { transportConfig } from '@config/mail';
-import { i_email } from '@interface/mail';
+import { transportConfig } from '&config/mail';
+import { i_email } from '&interface/mail';
 
 
 export default class EMail {

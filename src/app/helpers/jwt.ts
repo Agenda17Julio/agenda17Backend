@@ -1,4 +1,4 @@
-import { i_jwt } from '@interface/jwt';
+import { i_jwt } from '&interface/jwt';
 import { sign } from 'jsonwebtoken';
 
 export const generarToken = (payload: i_jwt) => {
