@@ -263,7 +263,7 @@ export const updateAnnoucements = async(req:Request, res:Response) => {
         let ruta = `${resolve(__dirname, `../files/convocatoria/${id}`)}`;
 
         if( !fs.existsSync(ruta) ){
-            fs.mkdirSync(ruta);
+            fs.mkdirSync(ruta,{recursive: true});
         }
 
         if( files ) {

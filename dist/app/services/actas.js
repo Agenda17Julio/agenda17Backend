@@ -68,7 +68,7 @@ var addNewActa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 }
                 path = path_1.resolve(__dirname, "../files/actas/" + id);
                 if (!fs_1.existsSync(path)) {
-                    fs_1.mkdirSync(path);
+                    fs_1.mkdirSync(path, { recursive: true });
                 }
                 adjuntos_res = [];
                 _a = [];
@@ -121,7 +121,7 @@ var updateActa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 }
                 path = path_1.resolve(__dirname, "../files/actas/" + id_acta);
                 if (!fs_1.existsSync(path)) {
-                    fs_1.mkdirSync(path);
+                    fs_1.mkdirSync(path, { recursive: true });
                 }
                 adjuntos_res = [];
                 _a = [];

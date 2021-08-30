@@ -1,8 +1,7 @@
 import Database from '&database/index';
 import { Request, Response } from 'express';
 import { resolve } from 'path';
-import { mkdirSync, existsSync, unlinkSync, rmdirSync } from 'fs';
-import { readdirSync } from 'fs';
+import { mkdirSync, existsSync, unlinkSync, rmdirSync,readdirSync } from 'fs';
 
 const db = Database.init().connection;
 
@@ -28,7 +27,8 @@ export const addNewActa = async (req:Request, res:Response) => {
 
     let path = resolve(__dirname, `../files/actas/${id}`);
     if( !existsSync(path)){
-        mkdirSync(path);
+        console.log(path)
+        mkdirSync(path, {recursive: true});
     }
                     
     const adjuntos_res:any = [];
@@ -71,7 +71,7 @@ export const updateActa = async(req:Request, res: Response) => {
 
     let path = resolve(__dirname, `../files/actas/${id_acta}`);
     if( !existsSync(path)){
-        mkdirSync(path);
+        mkdirSync(path, { recursive: true});
     }
 
     const adjuntos_res:any = [];

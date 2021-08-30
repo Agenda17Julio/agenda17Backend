@@ -9,7 +9,7 @@ export const adjuntos = (adjuntos:Array<any>, id_conv: number, isUpdate:boolean)
     let ruta = `${resolve(__dirname, `../files/convocatoria/${id_conv}`)}`;
 
     if(!fs.existsSync(ruta)){
-        fs.mkdirSync(ruta);
+        fs.mkdirSync(ruta,{recursive: true});
     }
 
     const data_adjuntos = [];
