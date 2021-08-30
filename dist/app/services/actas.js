@@ -43,7 +43,6 @@ exports.deleteAdjunto = exports.getAdjunto = exports.getAllAdjuntosActa = export
 var index_1 = __importDefault(require("&database/index"));
 var path_1 = require("path");
 var fs_1 = require("fs");
-var fs_2 = require("fs");
 var db = index_1.default.init().connection;
 var addNewActa = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var conv_id, data, id, file_adjuntos, aux, path, adjuntos_res, _a, _b, _i, i, _c, name_1, data_1, mv, adj;
@@ -68,6 +67,7 @@ var addNewActa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 }
                 path = path_1.resolve(__dirname, "../files/actas/" + id);
                 if (!fs_1.existsSync(path)) {
+                    console.log(path);
                     fs_1.mkdirSync(path, { recursive: true });
                 }
                 adjuntos_res = [];
@@ -168,7 +168,7 @@ var deleteActa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                             ok: false,
                             msg: 'Something went wrong!'
                         })];
-                files = fs_2.readdirSync(path);
+                files = fs_1.readdirSync(path);
                 files.map(function (file) { return __awaiter(void 0, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {

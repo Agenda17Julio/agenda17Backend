@@ -299,7 +299,7 @@ var updateAnnoucements = function (req, res) { return __awaiter(void 0, void 0, 
                 _b.sent();
                 ruta = "" + path_1.resolve(__dirname, "../files/convocatoria/" + id);
                 if (!fs_1.default.existsSync(ruta)) {
-                    fs_1.default.mkdirSync(ruta);
+                    fs_1.default.mkdirSync(ruta, { recursive: true });
                 }
                 if (files) {
                     file_adjuntos = files.adjuntos;

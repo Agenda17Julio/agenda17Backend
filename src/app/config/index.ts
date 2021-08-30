@@ -6,10 +6,10 @@ const { NODE_ENV } = process.env;
 const env:envtype = NODE_ENV as envtype;
 
 
-if( !env ) {
-    throw new Error('Configure environment in the file .env please!')
-} else if( env.includes('development' || 'production' || 'testing') ){
-    config({ path:`.env.${env}` });
-} else {
-    throw new Error('The environment is invalid!')
+switch( env ) {
+    case 'development' : config({ path:`.env.${env}` }); break;
+    case 'production' : config({ path:`.env.${env}` }); break;
+    case 'testing' : config({ path:`.env.${env}` }); break;
+    default: 
+        throw new Error('Ambiente inválido!')
 }

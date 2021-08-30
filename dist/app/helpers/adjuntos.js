@@ -9,7 +9,7 @@ var path_1 = require("path");
 var adjuntos = function (adjuntos, id_conv, isUpdate) {
     var ruta = "" + path_1.resolve(__dirname, "../files/convocatoria/" + id_conv);
     if (!fs_1.default.existsSync(ruta)) {
-        fs_1.default.mkdirSync(ruta);
+        fs_1.default.mkdirSync(ruta, { recursive: true });
     }
     var data_adjuntos = [];
     for (var i in adjuntos) {
